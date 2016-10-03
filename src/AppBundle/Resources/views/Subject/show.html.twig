@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Sujet' %}
+
+{% block body %}
+    <article class="card card-block">
+        <h3 class="card-title">
+            <a href="{{ path('subject_vote_up', {id:subject.id}) }}">&uparrow;</a>
+            <a href="{{ path('subject_vote_down', {id:subject.id}) }}">&downarrow;</a>
+            {{ subject.title }}
+        </h3>
+        <section class="card-text">{{ subject.description }}</section>
+        <span class="card-text">
+                <small class="text-muted">
+                    {{ subject.updatedAt|localizeddate }}
+                </small>
+            </span>
+        <form action="{{ path('subject_id', {id:subject.id}) }}" method="POST" novalidate="novalidate">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn">Envoyer</button>
+        </form>
+
+    </article>
+
+    {% for reply in subject.replies %}
+        <article class="{% if reply.vote < 0 %}unpopular{% endif %}">
+            <h4>
+                <a href="{{ path('reply_vote_down', {id:reply.id}) }}">&downarrow;</a>
+                <a href="{{ path('reply_vote_up', {id:reply.id}) }}">&uparrow;</a>
+                {{ reply.title }}
+            </h4>
+            <p>{{ reply.text }}</p>
+            <p>{{ reply.author }}</p>
+            <p>{{ reply.mail }}</p>
+            <p>Score : {{ reply.vote }}</p>
+        </article>
+    {% endfor %}
+
+    {% dump subject %}
+
+    <style>
+        .unpopular{background-color:#d3d3d3;}
+    </style>
+
+{% endblock %}
